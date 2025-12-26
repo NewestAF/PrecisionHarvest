@@ -11,8 +11,15 @@ class MMOItemsMatcher(matchValue: String) : ItemMatcher {
     init {
         val parts = matchValue.split(":")
 
-        targetType = parts[0]
-        targetId = parts[1]
+        if (parts.size == 2) {
+            targetType = parts[0]
+            targetId = parts[1]
+
+        }
+        else {
+            targetType = "INVAILD"
+            targetId = "INVAILD"
+        }
     }
 
     override fun matches(item: ItemStack?): Boolean {
