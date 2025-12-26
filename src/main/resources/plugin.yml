@@ -1,0 +1,4 @@
+name: PrecisionHarvest
+version: '1.0'
+main: com.newestaf.precisionHarvest.PrecisionHarvest
+api-version: '1.21'
