@@ -18,13 +18,9 @@ class ConfigManager(private val plugin: Plugin) {
     private val blockLookupCache = EnumMap<Material, MutableList<HarvestCategory>>(Material::class.java)
 
     fun loadConfig() {
-        // TODO: Load Default Config
-
-        // TODO: Load Tools
         toolMap.clear()
         loadTools()
 
-        // TODO: Load Categories
         categoryMap.clear()
         blockLookupCache.clear()
         loadCategories()
