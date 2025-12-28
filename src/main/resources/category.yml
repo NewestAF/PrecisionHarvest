@@ -1,0 +1,80 @@
+categories:
+  # ----------------------------------------------------------------------------
+  # [Case 1] 일반 광물: 철광석
+  # - 성공 시: MMOItems 원석 or 바닐라 원석 + 채광 경험치
+  # - 실패 시: 돌 부스러기 + 데미지
+  # ----------------------------------------------------------------------------
+  iron_mining:
+    # 이 카테고리에 속하는 블록들 (Material 이름)
+    blocks:
+      - IRON_ORE
+      - DEEPSLATE_IRON_ORE
+      - RAW_IRON_BLOCK
+
+    # 사용 가능한 도구 ID 목록 (tools.yml에 정의된 키값)
+    allowed_tools:
+      - geologist_hammer_mk1
+      - legendary_pickaxe
+
+    # 옵션 설정
+    options:
+      break_on_success: true  # 성공 시 원래 블록 파괴 (AIR로 변경)
+      break_on_fail: true     # 실패 시 원래 블록 파괴
+
+    # 보상 목록 (성공 시)
+    rewards_success:
+      - type: MMOITEMS
+        id: "MATERIAL:IRON_CRYSTAL"
+        amount: "1-2"         # 1개에서 2개 사이 랜덤
+        chance: 50.0          # 50% 확률로 획득
+
+      - type: VANILLA
+        material: RAW_IRON
+        amount: 1
+        chance: 100.0         # 100% 획득 (위의 50% 실패 시 보정용 아님, 독립 시행)
+
+      - type: COMMAND
+        line: "mmocore admin exp give %player% mining 50"
+        chance: 100.0
+
+    # 페널티 목록 (실패 시)
+    rewards_fail:
+      - type: VANILLA
+        material: COBBLESTONE
+        amount: 1
+        chance: 100.0
+
+      - type: DAMAGE          # 플레이어에게 데미지
+        amount: "2.0"
+        chance: 30.0
+
+      - type: MESSAGE
+        text: "<red>망치질을 잘못하여 손을 찧었습니다!"
+        chance: 30.0
+
+  # ----------------------------------------------------------------------------
+  # [Case 2] 고고학: 수상한 모래
+  # - 실패 시 블록이 깨지지 않고 유지됨 (재도전 가능)
+  # ----------------------------------------------------------------------------
+  ancient_excavation:
+    blocks:
+      - SUSPICIOUS_SAND
+      - SUSPICIOUS_GRAVEL
+
+    allowed_tools:
+      - ancient_brush
+
+    options:
+      break_on_success: true
+      break_on_fail: false    # 실패해도 블록이 사라지지 않음
+
+    rewards_success:
+      - type: MMOITEMS
+        id: "ARTIFACT:OLD_POTTERY"
+        amount: 1
+        chance: 100.0
+
+    rewards_fail:
+      - type: MESSAGE
+        text: "<gray>아무것도 찾지 못했습니다. 다시 시도해보세요."
+        chance: 100.0

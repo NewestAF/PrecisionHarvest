@@ -1,0 +1,113 @@
+# ==============================================================================
+# PrecisionHarvest - Tools Configuration
+#
+# [Placeholders & Math]
+# game_settings의 모든 값은 수식(Math Formula)을 지원합니다.
+# PAPI 변수를 사용할 수 있으며, 결과값은 자동으로 반올림(Integer) 처리됩니다.
+# 예: "10 + (%mmocore_stat_strength% * 0.5)"
+#
+# [Game Types]
+# - GRID_REVEAL: 지뢰찾기형 발굴 게임 (추천: 운, 지능)
+# - TIMING_BAR: 타이밍 맞추기 게임 (추천: 민첩)
+# - MEMORY_SEQUENCE: 순서 기억하기 게임 (추천: 지능, 집중)
+# - BALANCE_KEEP: 균형 잡기 게임 (추천: 민첩, 집중)
+# - RAPID_SMASH: 연타 격파 게임 (추천: 힘)
+# ==============================================================================
+
+tools:
+  # ----------------------------------------------------------------------------
+  # 예제 1: MMOItems 망치 (발굴 게임 - 운/지능 기반)
+  # ----------------------------------------------------------------------------
+  geologist_hammer_mk1:
+    # [아이템 매칭] MMOItems의 Type과 ID로 식별
+    matcher:
+      type: MMOITEMS    # [VANILLA, MMOITEMS]
+      value: "PICKAXE:GEOLOGIST_HAMMER"
+
+    # [게임 엔진]
+    game_type: GRID_REVEAL
+
+    # [동적 난이도 설정]
+    game_settings:
+      rows: "3"                                        # 3줄 (GUI 크기)
+      # 기본 4개를 찾아야 함. 지능 20당 1개씩 감소 (최소 1개)
+      target_count: "max(1, 4 - floor(%mmocore_stat_intelligence% / 20))"
+      # 기본 함정 3개. 운 50당 1개씩 감소 (최소 0개)
+      trap_count: "max(0, 3 - floor(%mmocore_stat_luck% / 50))"
+      # 클릭 기회: (목표물 + 함정 + 3)회 제공
+      click_limit: "4 + 3 + 3"
+
+    # [비용 및 조건]
+    requirements:
+      permission: "harvest.job.geologist"
+      mmocore_stamina: 10   # 스태미나 소모
+      mmocore_mana: 0
+      durability: 5         # 내구도 소모
+
+  # ----------------------------------------------------------------------------
+  # 예제 2: 바닐라 가위 (타이밍 게임 - 민첩 기반)
+  # ----------------------------------------------------------------------------
+  nimble_shears:
+    matcher:
+      type: VANILLA
+      material: SHEARS
+      custom_model_data: 1001 # 리소스팩 적용 시
+
+    game_type: TIMING_BAR
+
+    game_settings:
+      # 기본 2틱(빠름). 민첩 100이면 4틱(느려짐)으로 난이도 하락.
+      # (숫자가 클수록 커서 이동이 느림)
+      speed_tick: "2 + floor(%mmocore_stat_dexterity% / 50)"
+      # 성공 판정 범위(칸 수). 민첩 높으면 넓어짐.
+      target_width: "1 + floor(%mmocore_stat_dexterity% / 100)"
+      bounce: "true" # 왕복 여부 (true/false)
+
+    requirements:
+      mmocore_stamina: 5
+
+  # ----------------------------------------------------------------------------
+  # 예제 3: 붓 (기억 게임 - 지능 기반)
+  # ----------------------------------------------------------------------------
+  ancient_brush:
+    matcher:
+      type: MMOITEMS
+      value: "BRUSH:ANCIENT_BRUSH"
+
+    game_type: MEMORY_SEQUENCE
+
+    game_settings:
+      # 기억해야 할 개수. 지능 높으면 개수 감소.
+      sequence_length: "max(3, 7 - floor(%mmocore_stat_intelligence% / 30))"
+      # 보여주는 시간(틱). 40틱(2초).
+      display_time: "40"
+      # 입력 제한 시간(틱).
+      input_time_limit: "100"
+      # 사용할 색상 목록 (랜덤 선택)
+      colors:
+        - RED_WOOL
+        - BLUE_WOOL
+        - YELLOW_WOOL
+        - GREEN_WOOL
+
+    requirements:
+      mmocore_mana: 20
+
+  # ----------------------------------------------------------------------------
+  # 예제 4: 거인의 곡괭이 (격파 게임 - 힘 기반)
+  # ----------------------------------------------------------------------------
+  giant_pickaxe:
+    matcher:
+      type: MMOITEMS
+      value: "PICKAXE:TITAN_PICK"
+
+    game_type: RAPID_SMASH
+
+    game_settings:
+      target_hp: "100" # 깎아야 할 총 체력
+      time_limit_sec: "5" # 제한 시간(초)
+      # 클릭당 데미지 = 1 + (힘 * 0.1)
+      damage_per_click: "1 + (%mmocore_stat_strength% * 0.1)"
+
+    requirements:
+      mmocore_stamina: 15

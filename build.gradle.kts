@@ -26,6 +26,10 @@ dependencies {
     compileOnly("net.Indyuce:MMOItems-API:6.10-SNAPSHOT")
     compileOnly("net.Indyuce:MMOCore-API:1.12.1-SNAPSHOT")
     implementation("net.objecthunter:exp4j:0.4.8")
+
+    testImplementation("com.github.seeseemelk:MockBukkit-v1.20:3.9.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
 }
 
 tasks {
@@ -51,6 +55,10 @@ tasks {
         minecraftVersion("1.21")
 
         jvmArgs("-Xmx4G", "-Xms4G")
+    }
+
+    test {
+        useJUnitPlatform()
     }
 }
 

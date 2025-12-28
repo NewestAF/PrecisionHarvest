@@ -2,11 +2,12 @@ package com.newestaf.precisionHarvest.config
 
 import com.newestaf.precisionHarvest.minigame.GameType
 import com.newestaf.precisionHarvest.reward.RewardFactory
-import com.newestaf.precisionHarvest.util.item.ItemMatcher
+import com.newestaf.precisionHarvest.util.item.ItemAdapter
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import java.io.File
 import java.util.EnumMap
@@ -27,6 +28,20 @@ class ConfigManager(private val plugin: Plugin) {
 
         plugin.logger.info("PrecisionHarvest 로드 완료: 도구 ${toolMap.size}개, 카테고리 ${categoryMap.size}개")
     }
+
+    fun findCategory(material: Material, toolItem: ItemStack): Pair<HarvestCategory, HarvestTool>? {
+        val potentialCategories = blockLookupCache[material] ?: return null
+
+        return potentialCategories.firstNotNullOfOrNull { category ->
+            category.allowedToolIds
+                .mapNotNull { toolMap[it] }
+                .firstOrNull { it.adapter.matches(toolItem) }
+                ?.let { tool -> category to tool }
+        }
+
+    }
+
+    fun getTool(id: String): HarvestTool? = toolMap[id]
 
     private fun loadTools() {
         val toolConfig = loadYaml("tools.yml")
@@ -69,7 +84,10 @@ class ConfigManager(private val plugin: Plugin) {
         }
 
         val matcher = try {
-            ItemMatcher.from(matcherSection)
+            ItemAdapter.from(matcherSection) ?: run {
+                plugin.logger.warning("도구 '$id' 로드 실패: 유효하지 않은 Matcher 입니다.")
+                return null
+            }
         } catch (e: Exception) {
             plugin.logger.warning("도구 '$id' 로드 실패: Matcher 생성 중 오류 발생 - ${e.message}")
             return null
@@ -103,7 +121,7 @@ class ConfigManager(private val plugin: Plugin) {
 
         return HarvestTool(
             id = id,
-            matcher = matcher,
+            adapter = matcher,
             gameType = gameType,
             gameSettings = gameSettings,
             requirements = requirements,

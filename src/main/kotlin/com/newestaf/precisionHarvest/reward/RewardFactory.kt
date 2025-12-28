@@ -17,24 +17,24 @@ object RewardFactory {
                 RewardType.VANILLA -> {
                     val material = Material.matchMaterial(map["material"] as String) ?: return null
                     val (min, max) = parseAmount(map["amount"])
-                    VanillaReward(material, min, max, chance)
+                    VanillaReward(material, min.toInt(), max.toInt(), chance)
                 }
                 RewardType.MMOITEMS -> {
                     val fullId = map["id"] as String
                     val split = fullId.split(":")
                     val (min, max) = parseAmount(map["amount"])
-                    MMOItemReward(split[0], split[1], min, max, chance)
+                    MMOItemReward(split[0], split[1], min.toInt(), max.toInt(), chance)
                 }
                 RewardType.EXP -> {
                     val (min, max) = parseAmount(map["amount"])
-                    ExpReward(min, max, chance)
+                    ExpReward(min.toInt(), max.toInt(), chance)
                 }
                 RewardType.DAMAGE -> {
                     val (min, max) = parseAmount(map["amount"])
-                    DamageReward(min, max, chance)
+                    DamageReward(min.toDouble(), max.toDouble(), chance)
                 }
                 RewardType.MESSAGE -> {
-                    MessageReward(map["message"] as? String ?: "", chance)
+                    MessageReward(map["text"] as? String ?: "", chance)
                 }
 
             }
@@ -44,15 +44,15 @@ object RewardFactory {
 
     }
 
-    private fun parseAmount(obj: Any?): Pair<Int, Int> {
+    private fun parseAmount(obj: Any?): Pair<Number, Number> {
         return when (obj) {
-            is Number -> obj.toInt() to obj.toInt()
+            is Number -> obj to obj
             is String -> {
                 if (obj.contains("-")) {
                     val split = obj.split("-")
-                    Pair(split[0].toInt(), split[1].toInt())
+                    Pair(split[0].trim().toDoubleOrNull() ?: 0.0, split[1].trim().toDoubleOrNull() ?: 0.0)
                 } else {
-                    val v = obj.toInt()
+                    val v = obj.trim().toDoubleOrNull() ?: 0.0
                     v to v
                 }
             }
