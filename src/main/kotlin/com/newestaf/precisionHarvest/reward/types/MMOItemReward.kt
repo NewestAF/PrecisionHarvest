@@ -1,4 +1,4 @@
-package com.newestaf.precisionHarvest.reward
+package com.newestaf.precisionHarvest.reward.types
 
 import net.Indyuce.mmoitems.MMOItems
 import org.bukkit.entity.Player

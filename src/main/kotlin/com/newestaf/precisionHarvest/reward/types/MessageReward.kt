@@ -1,4 +1,4 @@
-package com.newestaf.precisionHarvest.reward
+package com.newestaf.precisionHarvest.reward.types
 
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.entity.Player
