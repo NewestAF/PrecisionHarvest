@@ -13,7 +13,7 @@ object VanillaDurabilityUtil {
         val meta = item.itemMeta as Damageable
         val maxDurability = item.type.maxDurability
 
-        return maxDurability <= 0 || (maxDurability - meta.damage) > cost
+        return maxDurability <= 0 || (maxDurability - meta.damage) >= cost
     }
 
     fun damageItem(player: Player, item: ItemStack, cost: Int) {

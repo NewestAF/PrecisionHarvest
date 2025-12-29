@@ -43,7 +43,7 @@ class MMOItemsAdapter(matchValue: String) : ItemAdapter {
 
         if (nbtItem.hasTag("MMOITEMS_DURABILITY")) {
             val current = nbtItem.getInteger("MMOITEMS_DURABILITY")
-            return current > cost
+            return current >= cost
         }
 
         return VanillaDurabilityUtil.checkHasEnough(item, cost)
