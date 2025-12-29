@@ -10,8 +10,11 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
+import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.scheduler.BukkitTask
 
 abstract class AbstractMinigame(
+    protected val plugin: JavaPlugin,
     protected val player: Player,
     protected val tool: HarvestTool
 ): InventoryHolder {
@@ -22,6 +25,8 @@ abstract class AbstractMinigame(
     protected abstract val soundEffect: Sound?
     var isRunning: Boolean = false
         protected set
+
+    private val activeTasks = mutableListOf<BukkitTask>()
 
     fun start(callback: (GameResult) -> Unit) {
         onFinish = callback
@@ -38,6 +43,9 @@ abstract class AbstractMinigame(
         if (!isRunning) return
 
         isRunning = false
+
+        cancelAllTasks()
+
         cleanUp()
         onFinish?.invoke(result)
 
@@ -71,6 +79,27 @@ abstract class AbstractMinigame(
 
     protected fun getStringSetting(key: String, default: String): String {
         return tool.gameSettings[key] ?: default
+    }
+
+    protected fun runTimer(delayedTicks: Long, periodTicks: Long, task: () -> Unit): BukkitTask {
+        val bukkitTask = Bukkit.getScheduler().runTaskTimer(plugin, task, periodTicks, delayedTicks)
+        activeTasks.add(bukkitTask)
+        return bukkitTask
+    }
+
+    protected fun runLater(delayedTicks: Long, task: () -> Unit): BukkitTask {
+        val bukkitTask = Bukkit.getScheduler().runTaskLater(plugin, task, delayedTicks)
+        activeTasks.add(bukkitTask)
+        return bukkitTask
+    }
+
+    private fun cancelAllTasks() {
+        activeTasks.forEach {
+            try {
+                it.cancel()
+            } catch (e: Exception) { }
+        }
+        activeTasks.clear()
     }
 
 }
