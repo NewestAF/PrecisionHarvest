@@ -1,4 +1,4 @@
-package com.newestaf.precisionHarvest.reward
+package com.newestaf.precisionHarvest.reward.types
 
 import org.bukkit.Material
 import org.bukkit.entity.Player
