@@ -1,5 +1,11 @@
 package com.newestaf.precisionHarvest.reward
 
+import com.newestaf.precisionHarvest.reward.types.DamageReward
+import com.newestaf.precisionHarvest.reward.types.ExpReward
+import com.newestaf.precisionHarvest.reward.types.HarvestReward
+import com.newestaf.precisionHarvest.reward.types.MMOItemReward
+import com.newestaf.precisionHarvest.reward.types.MessageReward
+import com.newestaf.precisionHarvest.reward.types.VanillaReward
 import org.bukkit.Material
 
 object RewardFactory {

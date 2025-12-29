@@ -1,6 +1,6 @@
 package com.newestaf.precisionHarvest.config
 
-import com.newestaf.precisionHarvest.reward.HarvestReward
+import com.newestaf.precisionHarvest.reward.types.HarvestReward
 import org.bukkit.Material
 
 data class HarvestCategory(
