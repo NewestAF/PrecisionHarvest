@@ -31,15 +31,14 @@ tools:
     game_settings:
       rows: "3"                                        # 3줄 (GUI 크기)
       # 기본 4개를 찾아야 함. 지능 20당 1개씩 감소 (최소 1개)
-      target_count: "max(1, 4 - floor(%mmocore_stat_intelligence% / 20))"
+      target_count: "4 - floor(%mmocore_stat_intelligence% / 20)"
       # 기본 함정 3개. 운 50당 1개씩 감소 (최소 0개)
-      trap_count: "max(0, 3 - floor(%mmocore_stat_luck% / 50))"
+      trap_count: "3 - floor(%mmocore_stat_luck% / 50)"
       # 클릭 기회: (목표물 + 함정 + 3)회 제공
       click_limit: "4 + 3 + 3"
 
     # [비용 및 조건]
     requirements:
-      permission: "harvest.job.geologist"
       mmocore_stamina: 10   # 스태미나 소모
       mmocore_mana: 0
       durability: 5         # 내구도 소모
@@ -78,7 +77,7 @@ tools:
 
     game_settings:
       # 기억해야 할 개수. 지능 높으면 개수 감소.
-      sequence_length: "max(3, 7 - floor(%mmocore_stat_intelligence% / 30))"
+      sequence_length: "7 - floor(%mmocore_stat_intelligence% / 30)"
       # 보여주는 시간(틱). 40틱(2초).
       display_time: "40"
       # 입력 제한 시간(틱).
