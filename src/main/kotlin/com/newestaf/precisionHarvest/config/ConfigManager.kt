@@ -8,11 +8,11 @@ import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.inventory.ItemStack
-import org.bukkit.plugin.Plugin
+import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.util.EnumMap
 
-class ConfigManager(private val plugin: Plugin) {
+class ConfigManager(private val plugin: JavaPlugin) {
 
     private val toolMap = HashMap<String, HarvestTool>()
     private val categoryMap = HashMap<String, HarvestCategory>()

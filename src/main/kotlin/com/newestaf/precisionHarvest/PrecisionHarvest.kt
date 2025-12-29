@@ -7,12 +7,13 @@ import org.bukkit.plugin.java.JavaPlugin
 
 class PrecisionHarvest : JavaPlugin() {
     val configManager: ConfigManager = ConfigManager(this)
-    val minigameManager: MinigameManager = MinigameManager(this, configManager)
+    val minigameManager: MinigameManager = MinigameManager(this)
 
     override fun onEnable() {
         configManager.loadConfig()
 
         server.pluginManager.registerEvents(HarvestTrigger(configManager, minigameManager), this)
+        server.pluginManager.registerEvents(minigameManager, this)
     }
 
     override fun onDisable() {
